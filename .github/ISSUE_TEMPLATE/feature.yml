@@ -1,0 +1,23 @@
+name: Feature
+description: A new canvas workflow, node, skill, or app request
+title: "[feat] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What should this do
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - app
+        - canvas-template
+        - node-library
+        - skill
+        - release
+    validations:
+      required: true

@@ -1,0 +1,29 @@
+name: Bug
+description: Something in the app, a template, a node, or a skill is wrong
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - app
+        - canvas-template
+        - node-library
+        - skill
+        - release
+    validations:
+      required: true

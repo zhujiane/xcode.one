@@ -1,0 +1,7 @@
+{
+  "id": "topic-expander",
+  "title": "Topic expander",
+  "baseType": "script",
+  "description": "Turn a short topic into a visual brief for downstream image or video nodes.",
+  "defaultPrompt": "Expand the topic into a concrete visual brief: subject, setting, light, and style. One short paragraph."
+}

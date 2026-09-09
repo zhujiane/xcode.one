@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "nodes": [
+    {
+      "id": "script-1",
+      "type": "script",
+      "title": "Draft",
+      "x": 80,
+      "y": 120,
+      "config": {
+        "prompt": "Write a one-sentence visual prompt from the topic.",
+        "modelId": null,
+        "assetIds": [],
+        "size": "auto",
+        "voice": "alloy",
+        "speed": 1,
+        "seconds": "4"
+      }
+    },
+    {
+      "id": "image-1",
+      "type": "image",
+      "title": "Image",
+      "x": 420,
+      "y": 120,
+      "config": {
+        "prompt": "",
+        "modelId": null,
+        "assetIds": [],
+        "size": "auto",
+        "voice": "alloy",
+        "speed": 1,
+        "seconds": "4"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "fromId": "script-1",
+      "toId": "image-1",
+      "fromPort": "text",
+      "toPort": "text",
+      "order": 0,
+      "label": "",
+      "outputId": null
+    }
+  ]
+}
