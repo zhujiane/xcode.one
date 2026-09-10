@@ -1,25 +1,124 @@
 # xcode.one
 
-Public companion of the closed-source app `xcode.01`.
+`xcode.01` 的公开配套仓库。
 
-This repo does **not** contain the app source. It is the open surface:
+- **应用本体**（Electron 桌面端）闭源，在私有仓库维护
+- **本仓库**负责：安装包发布、可分享画布模板、节点库、Skills，以及产品 Issue
 
-1. **Releases** — installers built from `xcode.01` are published here.
-2. **Canvas templates** — shareable canvas workflows. PRs welcome.
-3. **Node library** — reusable node definitions. PRs welcome.
-4. **Skills** — reusable agent skills. PRs welcome.
+> 这里没有应用源码。安装包发布在本仓库的 [GitHub Releases](https://github.com/zhujiane/xcode.one/releases)，不要把二进制提交进 git。
 
-Issues for the product live here. App code stays private.
+---
 
-## Layout
+## xcode.01 是什么
+
+`xcode.01` 是本地优先的 **AI 内容工作流桌面应用**：在无限画布上把文案、图片、视频、音频节点连成流水线，接入你自己的大模型渠道，一键顺推生成，并把结果沉淀到本地资产库。
+
+适合：短视频 / 图文创作、多模型对比试稿、需要把「提示词 → 多模态产出」固化成可复用流程的个人与小团队。
+
+---
+
+## 核心功能
+
+### 1. 无限画布工作流
+
+- 节点类型：文案（`script`）、图片（`image`）、视频（`video`）、音频（`audio`）等
+- 用连线表达上下游依赖；支持整图顺推，或从目标节点及其上游局部运行
+- 画布定义与运行记录分离：草稿可反复改，真正开跑前会冻结版本；历史输出可固定给下游，避免误改串味
+- 运行可取消、中断后按原远端任务恢复（例如长视频），避免重复计费提交
+
+### 2. 多协议大模型渠道
+
+- 自建渠道：OpenAI 兼容 / Relay、Anthropic、Gemini 等
+- 自动同步模型目录、类型识别、启停与别名
+- API Key 使用系统 `safeStorage` 加密存放，界面只显示是否已配置，不回显明文
+- 连接探测与真实试生成分开；按渠道限流，避免打爆上游
+
+### 3. 本地资产库
+
+- 「生成即归档」：画布产出的图 / 音 / 视频 / 文本进入统一资产库
+- 支持手动上传常用素材，并回填到节点
+- 数据在本地 SQLite + 受控资源目录，不依赖把源码或密钥放到公网
+
+### 4. 模板与开放生态（本仓库）
+
+- **Canvas templates**：可 PR 的画布 JSON（`schemaVersion: 1`），例如 `topic-to-image`
+- **Node library**：基于内置类型的开放节点描述，便于社区扩展常用默认提示与端口约定
+- **Skills**：可复用的操作技能说明，给智能体 / 协作者按同一套步骤工作
+
+> 扩展 / 插件模式仍在演进中；内置节点与画布主路径已可用。
+
+---
+
+## 优势
+
+| 点 | 说明 |
+| --- | --- |
+| 本地优先 | 工作流、运行记录、素材与密钥落在本机，渠道凭证加密保存 |
+| 工作流可复现 | 定义版本冻结 + 输出不可变候选，旧图永远对齐当时消费的文案 |
+| 自带模型，不绑死一家 | 用你的 Base URL 与 Key，多协议并存，目录可同步 |
+| 创作链路完整 | 文案 → 图 / 视频 / 音频同画布编排，而不是多个网页来回拷 |
+| 半开源协作 | 应用闭源保证产品节奏；模板 / 节点 / Skills / Issue 在本仓库开放 |
+
+---
+
+## 怎么用
+
+### 安装应用
+
+1. 打开本仓库 [Releases](https://github.com/zhujiane/xcode.one/releases)
+2. 按系统下载对应安装包：
+   - Windows：`xcode.01-<version>-setup.exe`
+   - macOS：`xcode.01-<version>.dmg`
+   - Linux：`xcode.01-<version>.AppImage`（或 `.deb`）
+3. 安装并启动（macOS 如遇未知开发者拦截，按系统提示允许即可）
+
+> 若 Releases 尚无安装包，说明首个公开发布还在准备中；可关注本仓库或提交 Issue 催一下。
+
+### 五分钟上手
+
+1. **配置渠道**  
+   进入「大模型渠道集成」→ 新建渠道 → 填协议、Base URL（含版本路径，如 `/v1`）、API Key → 保存后同步模型目录 → 需要时对单个模型做试生成。
+
+2. **打开画布**  
+   新建或打开一张画布 → 添加文案 / 图片等节点 → 用连线串好上下游 → 写好各节点提示词（或让下游吃上游输出）。
+
+3. **运行**  
+   先保存草稿，再「一键顺推」或对目标节点局部生成。在运行记录里查看状态、用量与候选结果；满意的输出可固定给下游。
+
+4. **用资产**  
+   生成结果会进资产库；也可上传本地素材，再挂到节点配置里复用。
+
+5. **用社区模板（可选）**  
+   从本仓库 [`canvas-templates/`](./canvas-templates/) 取 JSON，按应用内导入方式加载（勿带上私有 `modelId`、本地 `assetIds` 或运行历史）。
+
+### 提需求与反馈
+
+产品 Bug / 功能建议请开在 **本仓库 Issues**（不要往私有源码仓提）。
+
+模板相关请看 [CONTRIBUTING.md](./CONTRIBUTING.md)。
+
+---
+
+## 本仓库目录
 
 ```text
-releases/           notes for published builds (binaries go to GitHub Releases)
-canvas-templates/   schemaVersion 1 canvas JSON
-node-library/       open node definitions
-skills/             open skills
+releases/           发布说明（二进制只走 GitHub Releases）
+canvas-templates/   schemaVersion 1 画布模板
+node-library/       开放节点定义
+skills/             开放 Skills
 ```
 
-## Contribute
+## 与私有仓的关系
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
+| | `xcode.01`（私有） | `xcode.one`（本仓，公开） |
+| --- | --- | --- |
+| 应用源码 | ✅ | ❌ |
+| 安装包构建 | ✅ 构建 | ✅ 托管 Releases |
+| 模板 / 节点 / Skills | 可引用 | ✅ 开放 PR |
+| 产品 Issue | — | ✅ |
+
+---
+
+## License / 说明
+
+应用二进制与闭源部分的授权以发布说明为准。本仓库中的模板、节点描述与 Skills 默认欢迎 PR；提交前请去掉密钥、个人路径与不可分享的素材 ID。
