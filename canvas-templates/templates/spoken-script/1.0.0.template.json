@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 2,
+  "id": "official.spoken-script",
+  "version": "1.0.0",
+  "name": "口播稿润色与配音",
+  "description": "围绕主题与事实资料写口播初稿，清成可直接朗读的正文，再生成配音音频。",
+  "parameters": {
+    "topic": { "title": "主题", "type": "string", "required": true },
+    "facts": { "title": "事实资料", "type": "string", "required": true },
+    "tone": { "title": "语气", "type": "string", "default": "口语化、自然、简洁", "required": true }
+  },
+  "graph": {
+    "schemaVersion": 1,
+    "dependencies": [],
+    "nodes": [
+      {
+        "id": "draft",
+        "type": "script",
+        "title": "口播初稿",
+        "x": 80,
+        "y": 120,
+        "config": {
+          "prompt": "围绕 {{topic}}，依据 {{facts}} 写约150字口播稿，语气 {{tone}}。结构为引入、主要信息、自然收尾，不增加未经提供的事实。"
+        }
+      },
+      {
+        "id": "clean",
+        "type": "script",
+        "title": "朗读清稿",
+        "x": 580,
+        "y": 120,
+        "config": {
+          "prompt": "将上游内容整理为可直接朗读的中文正文。删掉标题、编号、Markdown、括号里的舞台说明及标签；数字写成易读表达，保留原意。不输出任何解释。"
+        }
+      },
+      {
+        "id": "voice",
+        "type": "audio",
+        "title": "生成配音",
+        "x": 1080,
+        "y": 120,
+        "config": { "prompt": "", "speed": 1 }
+      }
+    ],
+    "edges": [
+      {
+        "id": "draft-clean",
+        "fromId": "draft",
+        "toId": "clean",
+        "fromPort": "text",
+        "toPort": "text",
+        "order": 0,
+        "label": "口播初稿",
+        "outputId": null
+      },
+      {
+        "id": "clean-voice",
+        "fromId": "clean",
+        "toId": "voice",
+        "fromPort": "text",
+        "toPort": "text",
+        "order": 1,
+        "label": "朗读文本",
+        "outputId": null
+      }
+    ]
+  }
+}

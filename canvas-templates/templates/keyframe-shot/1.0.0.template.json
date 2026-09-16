@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 2,
+  "id": "official.keyframe-shot",
+  "version": "1.0.0",
+  "name": "关键帧生成短镜头",
+  "description": "写出关键帧提示词并生成一张关键帧，再以该图为视觉起点生成 4 秒短镜头。",
+  "parameters": {
+    "subject": { "title": "主体描述", "type": "string", "required": true },
+    "scene": { "title": "场景", "type": "string", "required": true },
+    "motion": {
+      "title": "运动方式",
+      "type": "string",
+      "default": "镜头缓慢推进，主体保持稳定",
+      "required": true
+    }
+  },
+  "graph": {
+    "schemaVersion": 1,
+    "dependencies": [],
+    "nodes": [
+      {
+        "id": "direction",
+        "type": "script",
+        "title": "关键帧提示词",
+        "x": 80,
+        "y": 120,
+        "config": {
+          "prompt": "为主体“{{subject}}”在场景“{{scene}}”中写一段单帧图像提示词，明确主体、构图、光线与质感。画面适合后续轻微运动，不含标题或解释。"
+        }
+      },
+      {
+        "id": "frame",
+        "type": "image",
+        "title": "关键帧",
+        "x": 580,
+        "y": 120,
+        "config": {
+          "prompt": "按参考提示词生成一张稳定清晰的关键帧，无文字、无水印。"
+        }
+      },
+      {
+        "id": "shot",
+        "type": "video",
+        "title": "短镜头",
+        "x": 1080,
+        "y": 120,
+        "config": {
+          "prompt": "以参考图为视觉起点。{{motion}}。保持主体与场景连贯，不新增字幕或标志。",
+          "seconds": "4"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "direction-frame",
+        "fromId": "direction",
+        "toId": "frame",
+        "fromPort": "text",
+        "toPort": "text",
+        "order": 0,
+        "label": "图像提示词",
+        "outputId": null
+      },
+      {
+        "id": "frame-shot",
+        "fromId": "frame",
+        "toId": "shot",
+        "fromPort": "image",
+        "toPort": "image",
+        "order": 1,
+        "label": "参考关键帧",
+        "outputId": null
+      }
+    ]
+  }
+}

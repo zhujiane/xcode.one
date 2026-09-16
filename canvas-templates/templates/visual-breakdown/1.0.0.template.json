@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "id": "official.visual-breakdown",
+  "version": "1.0.0",
+  "name": "视频画面拆解与创作提纲",
+  "description": "分析所附视频的可见画面结构，再为新内容目标提出一份短视频创作提纲。",
+  "parameters": {
+    "goal": { "title": "新内容目标", "type": "string", "required": true }
+  },
+  "graph": {
+    "schemaVersion": 1,
+    "dependencies": [],
+    "nodes": [
+      {
+        "id": "analysis",
+        "type": "script",
+        "title": "上传视频后分析画面",
+        "x": 80,
+        "y": 120,
+        "config": {
+          "prompt": "分析所附视频可见的主体、场景、构图、镜头变化与大致叙事顺序。只描述可见信息，无法确定处标注不确定；不要推断未提供的旁白或音轨，不给出伪精确时间码。"
+        }
+      },
+      {
+        "id": "plan",
+        "type": "script",
+        "title": "创作提纲",
+        "x": 580,
+        "y": 120,
+        "config": {
+          "prompt": "参考上游画面结构，为“{{goal}}”提出新的短视频创作提纲。给出3至5个镜头的主体、动作、构图与建议文案，用普通文本表达。不要承诺自动逐镜生成或剪辑。"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "analysis-plan",
+        "fromId": "analysis",
+        "toId": "plan",
+        "fromPort": "text",
+        "toPort": "text",
+        "order": 0,
+        "label": "画面分析",
+        "outputId": null
+      }
+    ]
+  }
+}

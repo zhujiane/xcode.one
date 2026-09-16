@@ -1,0 +1,416 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 2
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9.-]{1,79}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "description": {
+      "default": "",
+      "type": "string",
+      "maxLength": 2000
+    },
+    "parameters": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,79}$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "type": {
+            "type": "string",
+            "enum": ["string", "number", "boolean"]
+          },
+          "default": {
+            "type": ["string", "number", "boolean"]
+          },
+          "required": {
+            "default": true,
+            "type": "boolean"
+          }
+        },
+        "required": ["title", "type", "required"],
+        "additionalProperties": false
+      }
+    },
+    "graph": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "number",
+          "const": 1
+        },
+        "nodes": {
+          "maxItems": 200,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "type": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "x": {
+                "type": "number"
+              },
+              "y": {
+                "type": "number"
+              },
+              "config": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "$ref": "#/definitions/__schema0"
+                }
+              },
+              "plugin": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9.-]{1,79}$"
+                  },
+                  "version": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": ["id", "version", "sha256"],
+                "additionalProperties": false
+              },
+              "pluginRequirement": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9.-]{1,79}$"
+                  },
+                  "version": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                  }
+                },
+                "required": ["id", "version"],
+                "additionalProperties": false
+              },
+              "capabilityHint": {
+                "type": "object",
+                "properties": {
+                  "builtinType": {
+                    "type": "string",
+                    "enum": ["script", "image", "video", "audio", "stt"]
+                  }
+                },
+                "required": ["builtinType"],
+                "additionalProperties": false
+              },
+              "inputs": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "maxItems": 100,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": ["text", "image", "video", "audio", "json", "number", "boolean"]
+                      },
+                      "value": {
+                        "default": null,
+                        "anyOf": [
+                          {
+                            "$ref": "#/definitions/__schema1"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "assetId": {
+                        "default": null,
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": ["kind", "value", "assetId"],
+                    "additionalProperties": false
+                  }
+                }
+              }
+            },
+            "required": ["id", "type", "title", "x", "y", "config"],
+            "additionalProperties": false
+          }
+        },
+        "edges": {
+          "maxItems": 1000,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "fromId": {
+                "type": "string"
+              },
+              "toId": {
+                "type": "string"
+              },
+              "fromPort": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "toPort": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "order": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "label": {
+                "default": "",
+                "type": "string",
+                "maxLength": 200
+              },
+              "outputId": {
+                "default": null,
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "fromId",
+              "toId",
+              "fromPort",
+              "toPort",
+              "order",
+              "label",
+              "outputId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "dependencies": {
+          "default": [],
+          "maxItems": 100,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9.-]{1,79}$"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "source": {
+                "type": "object",
+                "properties": {
+                  "distribution": {
+                    "default": "public",
+                    "type": "string",
+                    "enum": ["public", "private"]
+                  },
+                  "repositoryUrl": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "pattern": "^https:\\/\\/[^\\s]+$"
+                  },
+                  "downloadUrl": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "pattern": "^https:\\/\\/[^\\s]+$"
+                  },
+                  "installInstructions": {
+                    "type": "string",
+                    "maxLength": 2000
+                  }
+                },
+                "required": ["distribution"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["id", "version"],
+            "additionalProperties": false
+          }
+        },
+        "pending": {
+          "default": [],
+          "maxItems": 200,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "nodeId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "field": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "key": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,79}$"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "type": {
+                "type": "string",
+                "enum": ["string", "number", "boolean"]
+              }
+            },
+            "required": ["nodeId", "field", "key", "title", "type"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["schemaVersion", "nodes", "edges", "dependencies", "pending"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["schemaVersion", "name", "description", "parameters", "graph"],
+  "additionalProperties": false,
+  "definitions": {
+    "__schema0": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/__schema0"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/__schema0"
+          }
+        }
+      ]
+    },
+    "__schema1": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/__schema1"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "$ref": "#/definitions/__schema1"
+          }
+        }
+      ]
+    }
+  }
+}

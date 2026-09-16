@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 2,
+  "id": "official.transcript-notes",
+  "version": "1.0.0",
+  "name": "录音转写与内容整理",
+  "description": "把音频或视频转写成文本，再分别整理成会议纪要与可阅读的内容稿。",
+  "parameters": {
+    "purpose": {
+      "title": "整理用途",
+      "type": "string",
+      "default": "复盘与后续行动",
+      "required": true
+    }
+  },
+  "graph": {
+    "schemaVersion": 1,
+    "dependencies": [],
+    "nodes": [
+      {
+        "id": "transcript",
+        "type": "stt",
+        "title": "上传音频或视频后转写",
+        "x": 80,
+        "y": 440,
+        "config": {}
+      },
+      {
+        "id": "notes",
+        "type": "script",
+        "title": "整理纪要",
+        "x": 580,
+        "y": 40,
+        "config": {
+          "prompt": "根据上游转写，围绕 {{purpose}} 整理核心结论、关键事实、待办和待确认问题。原文没有负责人或日期时写未明确；听不清或存在冲突时保留不确定性。"
+        }
+      },
+      {
+        "id": "post",
+        "type": "script",
+        "title": "内容稿",
+        "x": 580,
+        "y": 840,
+        "config": {
+          "prompt": "将上游转写整理为可阅读的内容稿，保留核心观点，去掉口头重复，不添加原文没有的信息。先给标题，再给正文；不输出带时间轴字幕。"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "transcript-notes",
+        "fromId": "transcript",
+        "toId": "notes",
+        "fromPort": "text",
+        "toPort": "text",
+        "order": 0,
+        "label": "原始转写",
+        "outputId": null
+      },
+      {
+        "id": "transcript-post",
+        "fromId": "transcript",
+        "toId": "post",
+        "fromPort": "text",
+        "toPort": "text",
+        "order": 1,
+        "label": "原始转写",
+        "outputId": null
+      }
+    ]
+  }
+}

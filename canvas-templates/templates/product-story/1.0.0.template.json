@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 2,
+  "id": "official.product-story",
+  "version": "1.0.0",
+  "name": "商品介绍与视觉封面",
+  "description": "先写商品介绍，再据此产出可复用的封面图提示词，最后生成一张概念封面。",
+  "parameters": {
+    "product": { "title": "商品与已确认卖点", "type": "string", "required": true },
+    "audience": { "title": "受众", "type": "string", "required": true },
+    "style": {
+      "title": "视觉风格",
+      "type": "string",
+      "default": "自然光、简洁构图、无文字",
+      "required": true
+    }
+  },
+  "graph": {
+    "schemaVersion": 1,
+    "dependencies": [],
+    "nodes": [
+      {
+        "id": "copy",
+        "type": "script",
+        "title": "商品介绍",
+        "x": 80,
+        "y": 120,
+        "config": {
+          "prompt": "商品资料：{{product}}。受众：{{audience}}。写约180字商品介绍，围绕真实卖点与使用场景，不补造功效、认证、价格或口碑。"
+        }
+      },
+      {
+        "id": "direction",
+        "type": "script",
+        "title": "封面图提示词",
+        "x": 580,
+        "y": 120,
+        "config": {
+          "prompt": "根据参考商品文案写一段单张概念封面图提示词。风格：{{style}}。明确主体、场景、构图、光线与留白；不出现虚构品牌标识，不要求生成长段文字。只输出图像提示词。"
+        }
+      },
+      {
+        "id": "cover",
+        "type": "image",
+        "title": "概念封面",
+        "x": 1080,
+        "y": 120,
+        "config": {
+          "prompt": "根据参考提示词生成商品概念封面，单张、清晰主体、无水印、无文字。"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "copy-direction",
+        "fromId": "copy",
+        "toId": "direction",
+        "fromPort": "text",
+        "toPort": "text",
+        "order": 0,
+        "label": "参考文案",
+        "outputId": null
+      },
+      {
+        "id": "direction-cover",
+        "fromId": "direction",
+        "toId": "cover",
+        "fromPort": "text",
+        "toPort": "text",
+        "order": 1,
+        "label": "图像提示词",
+        "outputId": null
+      }
+    ]
+  }
+}

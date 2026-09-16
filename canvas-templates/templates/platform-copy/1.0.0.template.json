@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 2,
+  "id": "official.platform-copy",
+  "version": "1.0.0",
+  "name": "一份资料，多平台文案",
+  "description": "从同一份事实资料分别写图文笔记、口播稿和长文提纲，三个平台版本共享同一套事实。",
+  "parameters": {
+    "material": { "title": "原始资料", "type": "string", "required": true },
+    "audience": { "title": "目标读者", "type": "string", "required": true },
+    "tone": {
+      "title": "表达语气",
+      "type": "string",
+      "default": "自然、克制、具体",
+      "required": true
+    }
+  },
+  "graph": {
+    "schemaVersion": 1,
+    "dependencies": [],
+    "nodes": [
+      {
+        "id": "facts",
+        "type": "script",
+        "title": "整理事实",
+        "x": 80,
+        "y": 440,
+        "config": {
+          "prompt": "原始资料：{{material}}。目标读者：{{audience}}。整理可直接引用的事实、核心价值、适用场景及未确认信息。只依据资料，不补造数据、体验、资质或用户评价。"
+        }
+      },
+      {
+        "id": "note",
+        "type": "script",
+        "title": "图文笔记",
+        "x": 580,
+        "y": 40,
+        "config": {
+          "prompt": "根据上游事实写一篇面向 {{audience}} 的图文笔记，语气 {{tone}}。输出三个备选标题、一篇约300字正文和5个相关话题。不要伪装亲身体验，不增加未证实事实。"
+        }
+      },
+      {
+        "id": "spoken",
+        "type": "script",
+        "title": "口播稿",
+        "x": 580,
+        "y": 440,
+        "config": {
+          "prompt": "根据上游事实写一段约150字口播稿，面向 {{audience}}，语气 {{tone}}。开头直入主题，句子短，只输出可朗读正文，不含标题、舞台提示或话题标签。"
+        }
+      },
+      {
+        "id": "outline",
+        "type": "script",
+        "title": "长文提纲",
+        "x": 580,
+        "y": 840,
+        "config": {
+          "prompt": "根据上游事实，输出面向 {{audience}} 的长文标题、三级内容提纲与需要补充的信息。保持 {{tone}}，不要冒充已完成事实核查。"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "facts-note",
+        "fromId": "facts",
+        "toId": "note",
+        "fromPort": "text",
+        "toPort": "text",
+        "order": 0,
+        "label": "事实整理",
+        "outputId": null
+      },
+      {
+        "id": "facts-spoken",
+        "fromId": "facts",
+        "toId": "spoken",
+        "fromPort": "text",
+        "toPort": "text",
+        "order": 1,
+        "label": "事实整理",
+        "outputId": null
+      },
+      {
+        "id": "facts-outline",
+        "fromId": "facts",
+        "toId": "outline",
+        "fromPort": "text",
+        "toPort": "text",
+        "order": 2,
+        "label": "事实整理",
+        "outputId": null
+      }
+    ]
+  }
+}

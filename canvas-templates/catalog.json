@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-09-16T04:41:01Z",
+  "templates": [
+    {
+      "id": "official.keyframe-shot",
+      "version": "1.0.0",
+      "name": "关键帧生成短镜头",
+      "description": "写出关键帧提示词并生成一张关键帧，再以该图为视觉起点生成 4 秒短镜头。",
+      "category": "video",
+      "tags": [
+        "关键帧",
+        "图生视频"
+      ],
+      "minAppVersion": "0.3.0",
+      "path": "templates/keyframe-shot/1.0.0.template.json",
+      "sha256": "a9d172e8b44505d469ea5b01ca46bd0a4ae0d22f1ed2471015b980cd2638bb84",
+      "nodeCount": 3,
+      "modelTypes": [
+        "image",
+        "text",
+        "video"
+      ],
+      "setup": [
+        "填写主体描述与场景",
+        "需要图生视频渠道，费用通常高于文本链路",
+        "4 秒是初始请求参数，需目标渠道支持"
+      ],
+      "outputs": [
+        "关键帧图",
+        "4 秒短视频素材"
+      ]
+    },
+    {
+      "id": "official.platform-copy",
+      "version": "1.0.0",
+      "name": "一份资料，多平台文案",
+      "description": "从同一份事实资料分别写图文笔记、口播稿和长文提纲，三个平台版本共享同一套事实。",
+      "category": "copywriting",
+      "tags": [
+        "新手",
+        "多平台"
+      ],
+      "minAppVersion": "0.3.0",
+      "path": "templates/platform-copy/1.0.0.template.json",
+      "sha256": "0a3b80086fedcee7d29f5b3fbffb4fce8cbfa1ac29c2a04ce5a99a1f2c3a622e",
+      "nodeCount": 4,
+      "modelTypes": [
+        "text"
+      ],
+      "setup": [
+        "填写原始资料与目标读者",
+        "可选：调整表达语气"
+      ],
+      "outputs": [
+        "图文笔记",
+        "口播稿",
+        "长文提纲"
+      ]
+    },
+    {
+      "id": "official.product-story",
+      "version": "1.0.0",
+      "name": "商品介绍与视觉封面",
+      "description": "先写商品介绍，再据此产出可复用的封面图提示词，最后生成一张概念封面。",
+      "category": "product",
+      "tags": [
+        "商品",
+        "封面"
+      ],
+      "minAppVersion": "0.3.0",
+      "path": "templates/product-story/1.0.0.template.json",
+      "sha256": "f55b91699320b288501a1fa57789ad282603245d61c04303a615691b954eff54",
+      "nodeCount": 3,
+      "modelTypes": [
+        "image",
+        "text"
+      ],
+      "setup": [
+        "填写商品真实卖点与受众",
+        "可选：指定视觉风格"
+      ],
+      "outputs": [
+        "商品介绍",
+        "可复用图像提示词",
+        "概念封面图"
+      ]
+    },
+    {
+      "id": "official.spoken-script",
+      "version": "1.0.0",
+      "name": "口播稿润色与配音",
+      "description": "围绕主题与事实资料写口播初稿，清成可直接朗读的正文，再生成配音音频。",
+      "category": "audio",
+      "tags": [
+        "口播",
+        "配音"
+      ],
+      "minAppVersion": "0.3.0",
+      "path": "templates/spoken-script/1.0.0.template.json",
+      "sha256": "ec04ea98f0ba6a0beebf10304e3bd4eb37692be64446cb30efb67b50208bd8a2",
+      "nodeCount": 3,
+      "modelTypes": [
+        "text",
+        "tts"
+      ],
+      "setup": [
+        "填写主题与事实资料",
+        "配置 TTS 渠道"
+      ],
+      "outputs": [
+        "可直接朗读的纯口播稿",
+        "配音音频"
+      ]
+    },
+    {
+      "id": "official.transcript-notes",
+      "version": "1.0.0",
+      "name": "录音转写与内容整理",
+      "description": "把音频或视频转写成文本，再分别整理成会议纪要与可阅读的内容稿。",
+      "category": "audio",
+      "tags": [
+        "转写",
+        "整理"
+      ],
+      "minAppVersion": "0.3.0",
+      "path": "templates/transcript-notes/1.0.0.template.json",
+      "sha256": "f89a9e57017ed9239d8518435b3bc7dbc84bb9cf928fa7b17866e4f4244e0484",
+      "nodeCount": 3,
+      "modelTypes": [
+        "stt",
+        "text"
+      ],
+      "setup": [
+        "创建画布后上传音频或视频",
+        "配置 STT 与文本模型"
+      ],
+      "outputs": [
+        "原始转写",
+        "整理纪要",
+        "可阅读内容稿"
+      ]
+    },
+    {
+      "id": "official.visual-breakdown",
+      "version": "1.0.0",
+      "name": "视频画面拆解与创作提纲",
+      "description": "分析所附视频的可见画面结构，再为新内容目标提出一份短视频创作提纲。",
+      "category": "video",
+      "tags": [
+        "画面分析",
+        "提纲"
+      ],
+      "minAppVersion": "0.3.0",
+      "path": "templates/visual-breakdown/1.0.0.template.json",
+      "sha256": "6d1ebcad21c4ff87e818d9de8addf65d8e4287432efe20ef998a303a3e2ad3db",
+      "nodeCount": 2,
+      "modelTypes": [
+        "text"
+      ],
+      "setup": [
+        "给画面分析节点上传视频",
+        "填写新内容目标",
+        "需要支持当前渠道视频输入的文本模型；只分析画面，不分析对白"
+      ],
+      "outputs": [
+        "画面结构分析",
+        "短视频创作提纲"
+      ]
+    }
+  ]
+}
