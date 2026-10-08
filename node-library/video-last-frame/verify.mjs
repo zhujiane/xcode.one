@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
-import { mkdtemp, readFile, writeFile, rm, readdir, mkdir } from 'node:fs/promises'
+import { mkdtemp, readFile, writeFile, rm, readdir, mkdir, symlink } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { join } from 'node:path'
+import { join, dirname, resolve } from 'node:path'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import { unzipSync } from 'fflate'
@@ -12,6 +12,10 @@ const run = promisify(execFile)
 const root = fileURLToPath(new URL('.', import.meta.url))
 const ffmpeg = process.env.FFMPEG_PATH || 'ffmpeg'
 const directory = await mkdtemp(join(tmpdir(), 'last-frame-verify-'))
+const resourcesPath = process.resourcesPath
+process.resourcesPath = join(directory, 'resources')
+await mkdir(join(process.resourcesPath, 'app.asar.unpacked', 'node_modules'), { recursive: true })
+await symlink(dirname(resolve(ffmpeg)), join(process.resourcesPath, 'app.asar.unpacked', 'node_modules', 'ffmpeg-static'), process.platform === 'win32' ? 'junction' : 'dir')
 const manifest = JSON.parse(await readFile(join(root, 'manifest.json'), 'utf8'))
 const archive = unzipSync(await readFile(join(root, 'dist', `${manifest.id}-${manifest.version}.zip`)))
 assert.deepEqual(Object.keys(archive).sort(), ['LICENSE', 'dist/executor.cjs', 'manifest.json'])
@@ -27,7 +31,7 @@ function context(bytes, overrides = {}) {
   saved = undefined
   return {
     nodeType: manifest.nodes[0].type,
-    config: { ffmpegPath: ffmpeg },
+    config: {},
     inputs: { video: [{ kind: 'video', value: null, assetId }] },
     signal: new AbortController().signal,
     progress() {},
@@ -77,7 +81,10 @@ try {
   await assert.rejects(execute(context(Buffer.from('invalid video'))), /提取失败/)
   await assert.rejects(execute(context(Buffer.alloc(0))), /为空/)
   await assert.rejects(execute(context(pixels, { inputs: {} })), /连接一个视频/)
-  await assert.rejects(execute(context(pixels, { config: { ffmpegPath: join(directory, 'missing-ffmpeg') } })), /无法启动 FFmpeg/)
+  const bundledResources = process.resourcesPath
+  process.resourcesPath = join(directory, 'missing-resources')
+  await assert.rejects(execute(context(pixels)), /未找到 XCODE.ONE 内置 FFmpeg/)
+  process.resourcesPath = bundledResources
   const controller = new AbortController()
   await assert.rejects(execute(context(await readFile(join(directory, 'b-frames.mp4')), {
     signal: controller.signal,
@@ -87,5 +94,6 @@ try {
   assert.deepEqual(await temporaryDirs(), before, 'execution must clean temporary files')
   console.log('PASS invalid/empty/missing input, missing FFmpeg, active cancellation, temporary file cleanup')
 } finally {
+  process.resourcesPath = resourcesPath
   await rm(directory, { recursive: true, force: true })
 }

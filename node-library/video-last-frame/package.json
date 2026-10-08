@@ -1,11 +1,13 @@
 {
   "name": "xcode-video-last-frame",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "node build.mjs",
     "verify": "node verify.mjs"
   },
-  "devDependencies": { "fflate": "0.8.3" }
+  "devDependencies": {
+    "fflate": "0.8.3"
+  }
 }

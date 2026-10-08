@@ -7,8 +7,7 @@ const { createRequire } = require('node:module')
 const { tmpdir } = require('node:os')
 const { join, resolve } = require('node:path')
 
-function findFfmpeg(config) {
-  if (config.ffmpegPath?.trim()) return config.ffmpegPath.trim()
+function findFfmpeg() {
   const executable = process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg'
   if (process.resourcesPath) {
     const bundled = join(process.resourcesPath, 'app.asar.unpacked', 'node_modules', 'ffmpeg-static', executable)
@@ -22,10 +21,10 @@ function findFfmpeg(config) {
       const binary = hostRequire('ffmpeg-static')?.replace('app.asar', 'app.asar.unpacked')
       if (binary && existsSync(binary)) return binary
     } catch {
-      // The host dependency is optional; try PATH below.
+      // Try the next host installation location.
     }
   }
-  return executable
+  throw new Error('未找到 XCODE.ONE 内置 FFmpeg，请检查应用安装完整性。')
 }
 
 function extract(binary, source, target, signal) {
@@ -50,7 +49,7 @@ function extract(binary, source, target, signal) {
     child.on('close', code => {
       signal.removeEventListener('abort', abort)
       if (signal.aborted) return reject(signal.reason || new Error('尾帧提取已取消'))
-      if (spawnError) return reject(new Error('无法启动 FFmpeg，请在高级设置填写可执行文件的完整路径，或将 FFmpeg 加入系统 PATH。'))
+      if (spawnError) return reject(new Error('无法启动 XCODE.ONE 内置 FFmpeg，请检查应用安装完整性。'))
       if (code !== 0) return reject(new Error(`视频尾帧提取失败：${stderr.trim().slice(-1000) || `FFmpeg 退出码 ${code}`}`))
       resolveTask()
     })
@@ -77,7 +76,7 @@ exports.execute = async context => {
     await writeFile(source, bytes)
     signal.throwIfAborted()
     context.progress(0.15, '解码视频，提取最后一帧')
-    await extract(findFfmpeg(context.config), source, target, signal)
+    await extract(findFfmpeg(), source, target, signal)
     signal.throwIfAborted()
     let image
     try {

@@ -1,14 +1,14 @@
 {
   "schemaVersion": 2,
   "id": "xcode.video-last-frame",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "视频尾帧",
   "description": "输入一个视频，提取最后一帧为原尺寸 PNG 图片。优先复用 XCODE.ONE 内置 FFmpeg，全程本地处理。",
   "nodeApi": 1,
   "entry": "dist/executor.cjs",
   "source": {
     "repositoryUrl": "https://github.com/zhujiane/xcode.one",
-    "downloadUrl": "https://raw.githubusercontent.com/zhujiane/xcode.one/main/node-library/video-last-frame/dist/xcode.video-last-frame-1.0.0.zip",
+    "downloadUrl": "https://raw.githubusercontent.com/zhujiane/xcode.one/main/node-library/video-last-frame/dist/xcode.video-last-frame-1.0.1.zip",
     "installInstructions": "下载 ZIP，在 XCODE.ONE 插件与扩展 → 安装节点中选择，核对预览后信任并安装代码。"
   },
   "nodes": [
@@ -16,31 +16,31 @@
       "type": "xcode.video-last-frame/extract",
       "title": "提取视频尾帧",
       "description": "提取主视频轨道实际解码后的最后一帧，包括片尾黑帧；保留原尺寸，遵循视频旋转信息，输出 PNG 到素材库。",
-      "runtime": { "kind": "code" },
-      "inputs": [{ "id": "video", "title": "输入视频", "kind": "video", "required": true }],
-      "outputs": [{ "id": "image", "title": "尾帧图片", "kind": "image", "required": true }],
+      "runtime": {
+        "kind": "code"
+      },
+      "inputs": [
+        {
+          "id": "video",
+          "title": "输入视频",
+          "kind": "video",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "id": "image",
+          "title": "尾帧图片",
+          "kind": "image",
+          "required": true
+        }
+      ],
       "configSchema": {
         "type": "object",
         "additionalProperties": false,
-        "properties": {
-          "ffmpegPath": {
-            "type": "string",
-            "title": "FFmpeg 路径",
-            "maxLength": 2048,
-            "description": "留空自动使用应用内置 FFmpeg 或系统 PATH；也可填写 ffmpeg 可执行文件的完整路径。"
-          }
-        }
+        "properties": {}
       },
-      "defaultConfig": { "ffmpegPath": "" },
-      "ui": {
-        "ffmpegPath": {
-          "control": "input",
-          "label": "FFmpeg 路径（可选）",
-          "placeholder": "留空自动检测",
-          "group": "advanced",
-          "order": 1
-        }
-      },
+      "defaultConfig": {},
       "execution": "pure",
       "timeoutMs": 1200000
     }
